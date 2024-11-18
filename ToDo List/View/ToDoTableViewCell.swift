@@ -126,19 +126,20 @@ class ToDoTableViewCell: UITableViewCell {
     
     func configure(with todo: ToDo) {
         titleLabel.text = todo.todo
+
         
+        titleLabel.attributedText = nil
         
-        if todo.description.isEmpty
-        {
+        if todo.description.isEmpty {
             descriptionLabel.text = "-"
-        } else
-        {
+        } else {
             descriptionLabel.text = todo.description
         }
         
         dateLabel.text = formatDate(Date())
         
         if todo.completed {
+            
             statusIndicator.layer.borderColor = UIColor.systemYellow.cgColor
             checkmarkView.isHidden = false
             titleLabel.textColor = UIColor(white: 0.8, alpha: 1)
@@ -150,14 +151,25 @@ class ToDoTableViewCell: UITableViewCell {
             statusIndicator.layer.borderColor = UIColor.gray.cgColor
             checkmarkView.isHidden = true
             titleLabel.textColor = .white
-            //titleLabel.attributedText = nil
             titleLabel.text = todo.todo
         }
     }
+
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yy"
         return formatter.string(from: date)
     }
+    
+    
+    //to fix issues with updating tablewview and scrolling
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.attributedText = nil
+        checkmarkView.isHidden = true
+        statusIndicator.layer.borderColor = UIColor.gray.cgColor
+        titleLabel.textColor = .white
+    }
+
 }

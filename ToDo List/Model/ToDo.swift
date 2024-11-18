@@ -8,8 +8,8 @@
 
 struct ToDo: Codable {
     let id: Int
-    let todo: String
-    let completed: Bool
+    var todo: String
+    var completed: Bool
     let userId: Int
     var description: String = ""
     

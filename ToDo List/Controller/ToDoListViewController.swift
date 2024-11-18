@@ -98,6 +98,12 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
 //        return 60
 //    }
     
+    //MARK:  UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        todos[indexPath.row].completed.toggle()
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
     
 
     //MARK:  api calls
