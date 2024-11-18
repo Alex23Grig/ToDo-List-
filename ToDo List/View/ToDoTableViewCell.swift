@@ -127,7 +127,14 @@ class ToDoTableViewCell: UITableViewCell {
     func configure(with todo: ToDo) {
         titleLabel.text = todo.todo
         
-        descriptionLabel.text = "Описание задачи"
+        
+        if todo.description.isEmpty
+        {
+            descriptionLabel.text = "-"
+        } else
+        {
+            descriptionLabel.text = todo.description
+        }
         
         dateLabel.text = formatDate(Date())
         
