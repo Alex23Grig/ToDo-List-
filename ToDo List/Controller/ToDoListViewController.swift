@@ -32,7 +32,8 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
     
     private func setupTableView() {
         tableView.backgroundColor = .black
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .gray
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ToDoTableViewCell.self, forCellReuseIdentifier: "ToDoCell")
