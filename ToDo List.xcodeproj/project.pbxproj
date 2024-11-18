@@ -17,6 +17,9 @@
 		8A72F4E92CEB717500EF390F /* ToDo_ListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F4E82CEB717500EF390F /* ToDo_ListTests.swift */; };
 		8A72F4F32CEB717500EF390F /* ToDo_ListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F4F22CEB717500EF390F /* ToDo_ListUITests.swift */; };
 		8A72F4F52CEB717500EF390F /* ToDo_ListUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F4F42CEB717500EF390F /* ToDo_ListUITestsLaunchTests.swift */; };
+		8A72F5062CEB753E00EF390F /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5052CEB753E00EF390F /* ToDo.swift */; };
+		8A72F5082CEB75AE00EF390F /* ToDoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5072CEB75AE00EF390F /* ToDoResponse.swift */; };
+		8A72F50A2CEB75E700EF390F /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5092CEB75E700EF390F /* ToDoListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,9 @@
 		8A72F4EE2CEB717500EF390F /* ToDo ListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ToDo ListUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A72F4F22CEB717500EF390F /* ToDo_ListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo_ListUITests.swift; sourceTree = "<group>"; };
 		8A72F4F42CEB717500EF390F /* ToDo_ListUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo_ListUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8A72F5052CEB753E00EF390F /* ToDo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
+		8A72F5072CEB75AE00EF390F /* ToDoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoResponse.swift; sourceTree = "<group>"; };
+		8A72F5092CEB75E700EF390F /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,10 @@
 		8A72F4CD2CEB717300EF390F /* ToDo List */ = {
 			isa = PBXGroup;
 			children = (
+				8A72F5042CEB724700EF390F /* Handy */,
+				8A72F5012CEB722B00EF390F /* Model */,
+				8A72F5022CEB723400EF390F /* View */,
+				8A72F5032CEB723900EF390F /* Controller */,
 				8A72F4CE2CEB717300EF390F /* AppDelegate.swift */,
 				8A72F4D02CEB717300EF390F /* SceneDelegate.swift */,
 				8A72F4D22CEB717300EF390F /* ViewController.swift */,
@@ -128,6 +138,37 @@
 				8A72F4F42CEB717500EF390F /* ToDo_ListUITestsLaunchTests.swift */,
 			);
 			path = "ToDo ListUITests";
+			sourceTree = "<group>";
+		};
+		8A72F5012CEB722B00EF390F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8A72F5052CEB753E00EF390F /* ToDo.swift */,
+				8A72F5072CEB75AE00EF390F /* ToDoResponse.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		8A72F5022CEB723400EF390F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8A72F5032CEB723900EF390F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8A72F5092CEB75E700EF390F /* ToDoListViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		8A72F5042CEB724700EF390F /* Handy */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Handy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,8 +303,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A72F4D32CEB717300EF390F /* ViewController.swift in Sources */,
+				8A72F5062CEB753E00EF390F /* ToDo.swift in Sources */,
 				8A72F4CF2CEB717300EF390F /* AppDelegate.swift in Sources */,
 				8A72F4D12CEB717300EF390F /* SceneDelegate.swift in Sources */,
+				8A72F5082CEB75AE00EF390F /* ToDoResponse.swift in Sources */,
+				8A72F50A2CEB75E700EF390F /* ToDoListViewController.swift in Sources */,
 				8A72F4D92CEB717300EF390F /* ToDo_List.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,13 +496,15 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Grig.ToDo-List";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -480,13 +526,15 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Grig.ToDo-List";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
