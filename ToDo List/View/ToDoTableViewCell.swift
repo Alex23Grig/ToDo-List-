@@ -95,7 +95,7 @@ class ToDoTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             // Status indicator (circle)
             statusIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            statusIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             statusIndicator.widthAnchor.constraint(equalToConstant: 24),
             statusIndicator.heightAnchor.constraint(equalToConstant: 24),
             
