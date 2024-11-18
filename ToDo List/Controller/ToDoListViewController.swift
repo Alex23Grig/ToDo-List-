@@ -8,19 +8,79 @@
 import Foundation
 import UIKit
 
-class ToDoListViewController: ViewController {
+class ToDoListViewController: ViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    
+    private let tableView = UITableView()
+    private var todos: [ToDo] = [] // Your data source
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
+        setupTableView()
+        loadData()
         
         fetchToDos { todos in
             guard let todos = todos else { return }
             DispatchQueue.main.async {
+                // Обновляем данные на главном экране
                 print(todos)
             }
         }
 
     }
+    
+    private func setupTableView() {
+        tableView.backgroundColor = .black
+        tableView.separatorStyle = .none
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(ToDoTableViewCell.self, forCellReuseIdentifier: "ToDoCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    private func loadData() {
+        // Загрузите данные из API и обновите таблицу
+        fetchToDos { [weak self] todos in
+            self?.todos = todos ?? []
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - UITableViewDataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("Amount of todos is \(todos.count)")
+        return todos.count
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath) as? ToDoTableViewCell else {
+            return UITableViewCell()
+        }
+        let todo = todos[indexPath.row]
+        cell.configure(with: todo)
+        return cell
+    }
+    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 60
+//    }
+    
+    
+    //MARK:  api calls
+  
     
     
     func fetchToDos(completion: @escaping ([ToDo]?) -> Void) {
@@ -49,3 +109,5 @@ class ToDoListViewController: ViewController {
 
     
 }
+
+

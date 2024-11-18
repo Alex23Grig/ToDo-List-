@@ -20,6 +20,7 @@
 		8A72F5062CEB753E00EF390F /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5052CEB753E00EF390F /* ToDo.swift */; };
 		8A72F5082CEB75AE00EF390F /* ToDoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5072CEB75AE00EF390F /* ToDoResponse.swift */; };
 		8A72F50A2CEB75E700EF390F /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F5092CEB75E700EF390F /* ToDoListViewController.swift */; };
+		8A72F50C2CEB7A0C00EF390F /* ToDoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72F50B2CEB7A0C00EF390F /* ToDoTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		8A72F5052CEB753E00EF390F /* ToDo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
 		8A72F5072CEB75AE00EF390F /* ToDoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoResponse.swift; sourceTree = "<group>"; };
 		8A72F5092CEB75E700EF390F /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
+		8A72F50B2CEB7A0C00EF390F /* ToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 		8A72F5022CEB723400EF390F /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8A72F50B2CEB7A0C00EF390F /* ToDoTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				8A72F4D32CEB717300EF390F /* ViewController.swift in Sources */,
 				8A72F5062CEB753E00EF390F /* ToDo.swift in Sources */,
 				8A72F4CF2CEB717300EF390F /* AppDelegate.swift in Sources */,
+				8A72F50C2CEB7A0C00EF390F /* ToDoTableViewCell.swift in Sources */,
 				8A72F4D12CEB717300EF390F /* SceneDelegate.swift in Sources */,
 				8A72F5082CEB75AE00EF390F /* ToDoResponse.swift in Sources */,
 				8A72F50A2CEB75E700EF390F /* ToDoListViewController.swift in Sources */,
