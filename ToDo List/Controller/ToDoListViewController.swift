@@ -8,26 +8,45 @@
 import Foundation
 import UIKit
 
-class ToDoListViewController: ViewController, UITableViewDataSource, UITableViewDelegate {
+class ToDoListViewController: ViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    
+    //MARK:  variables
     private let tableView = UITableView()
-    private var todos: [ToDo] = [] // Your data source
+    private var todos: [ToDo] = []
+    private var filteredTodos: [ToDo] = []
+    private var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
+        setupSearchBar()
         setupTableView()
+        
         loadData()
         
         fetchToDos { todos in
             guard let todos = todos else { return }
             DispatchQueue.main.async {
-                // Обновляем данные на главном экране
                 print(todos)
             }
         }
 
+    }
+    
+    private func setupSearchBar() {
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.placeholder = "Search"
+        searchBar.backgroundColor = .black
+        searchBar.barTintColor = .black
+        searchBar.searchTextField.textColor = .white
+        
+        
+        let headerHeight: CGFloat = 80
+        searchBar.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight)
+        
+        tableView.tableHeaderView = searchBar
     }
     
     private func setupTableView() {
@@ -80,6 +99,7 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
 //    }
     
     
+
     //MARK:  api calls
   
     
