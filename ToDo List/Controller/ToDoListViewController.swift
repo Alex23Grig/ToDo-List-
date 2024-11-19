@@ -81,7 +81,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70)
         ])
         
-        
+    
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 70, right: 0)
     }
 
@@ -200,12 +200,26 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
+    //MARK:  Context Menu Setup
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+           return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+               
+               let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
+                   print("Edit tapped for row \(indexPath.row)")
+                   
+               }
+               
+               let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                   print("Delete tapped for row \(indexPath.row)")
+               }
+               
 
-    //MARK:  api calls
-  
-
-
+               return UIMenu(title: "", children: [editAction, deleteAction])
+           }
+       }
     
+    //MARK:  api calls
     func fetchToDosFromAPI(completion: @escaping (Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: Constants.apiURL)!
