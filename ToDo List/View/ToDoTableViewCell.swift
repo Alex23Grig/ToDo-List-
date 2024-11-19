@@ -130,10 +130,10 @@ class ToDoTableViewCell: UITableViewCell {
         
         titleLabel.attributedText = nil
         
-        if todo.description.isEmpty {
+        if todo.toDoDescription.isEmpty {
             descriptionLabel.text = "-"
         } else {
-            descriptionLabel.text = todo.description
+            descriptionLabel.text = todo.toDoDescription
         }
         
         dateLabel.text = formatDate(Date())

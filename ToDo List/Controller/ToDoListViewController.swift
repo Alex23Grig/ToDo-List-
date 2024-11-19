@@ -7,8 +7,9 @@
 
 import Foundation
 import UIKit
+import CoreData
 
-class ToDoListViewController: ViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class ToDoListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     //MARK:  variables
     private let tableView = UITableView()
@@ -16,9 +17,18 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
     private var filteredTodos: [ToDo] = []
     private var searchBar: UISearchBar!
     
+    let toDoManager = ToDoListManager()
+    
+    
+    //MARK:   ui setup
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
+        // Create
+        //toDoManager.createItem(title: "Workout", description: "Gym session at 6 PM")
+        //let items = toDoManager.fetchAllItems()
         
         setupSearchBar()
         setupTableView()
@@ -68,7 +78,6 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
     }
     
     private func loadData() {
-        // Загрузите данные из API и обновите таблицу
         fetchToDos { [weak self] todos in
             self?.todos = todos ?? []
             DispatchQueue.main.async {
@@ -112,7 +121,7 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
     
     func fetchToDos(completion: @escaping ([ToDo]?) -> Void) {
         DispatchQueue.global(qos: .background).async {
-            let url = URL(string: "https://dummyjson.com/todos")!
+            let url = URL(string: Constants.apiURL)!
 
             URLSession.shared.dataTask(with: url) { data, response, error in
                 guard let data = data, error == nil else {
@@ -133,8 +142,10 @@ class ToDoListViewController: ViewController, UITableViewDataSource, UITableView
             }.resume()
         }
     }
+    
 
     
+   
 }
 
 
