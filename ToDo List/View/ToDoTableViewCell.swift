@@ -154,6 +154,39 @@ class ToDoTableViewCell: UITableViewCell {
             titleLabel.text = todo.todo
         }
     }
+    
+    func configure(with todo: ToDoListItem) {
+        titleLabel.text = todo.title
+
+        
+        titleLabel.attributedText = nil
+        
+//        if todo.toDoDescription?.isEmpty {
+//            descriptionLabel.text = "-"
+//        } else {
+//            descriptionLabel.text = todo.toDoDescription
+//        }
+        descriptionLabel.text = todo.toDoDescription ?? ""
+        
+        dateLabel.text = formatDate(Date())
+        
+        if todo.completed {
+            
+            statusIndicator.layer.borderColor = UIColor.systemYellow.cgColor
+            checkmarkView.isHidden = false
+            titleLabel.textColor = UIColor(white: 0.8, alpha: 1)
+            titleLabel.attributedText = NSAttributedString(
+                string: todo.title ?? "",
+                attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+            )
+        } else {
+            statusIndicator.layer.borderColor = UIColor.gray.cgColor
+            checkmarkView.isHidden = true
+            titleLabel.textColor = .white
+            titleLabel.text = todo.title
+        }
+    }
+
 
     
     private func formatDate(_ date: Date) -> String {

@@ -18,7 +18,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     private var searchBar: UISearchBar!
     
     let toDoManager = ToDoListManager()
-    
+    var items:[ToDoListItem] = []
     
     //MARK:   ui setup
     
@@ -26,22 +26,19 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        // Create
-        //toDoManager.createItem(title: "Workout", description: "Gym session at 6 PM")
-        //let items = toDoManager.fetchAllItems()
+        items = toDoManager.fetchAllItems()
         
         setupSearchBar()
         setupTableView()
         
-        loadData()
-        
-        fetchToDos { todos in
-            guard let todos = todos else { return }
-            DispatchQueue.main.async {
-                print(todos)
-            }
-        }
-
+        if isFirstLaunch() {
+            print("This is the first launch of the app!")
+            
+            print("amount of items in core data is \(items.count)")
+        } else {
+            print("Welcome back!")
+            print("amount of items in core data is \(items.count)")
+        }   
     }
     
     private func setupSearchBar() {
@@ -77,9 +74,10 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
     }
     
-    private func loadData() {
-        fetchToDos { [weak self] todos in
+    private func loadDataFromAPI() {
+        fetchToDosFromAPI { [weak self] todos in
             self?.todos = todos ?? []
+            self?.toDoManager.saveStructArray(todos ?? [])
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
@@ -90,7 +88,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("Amount of todos is \(todos.count)")
-        return todos.count
+        return items.count
     }
     
     
@@ -98,7 +96,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath) as? ToDoTableViewCell else {
             return UITableViewCell()
         }
-        let todo = todos[indexPath.row]
+        let todo = items[indexPath.row]
         cell.configure(with: todo)
         return cell
     }
@@ -110,7 +108,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        todos[indexPath.row].completed.toggle()
+        items[indexPath.row].completed.toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
@@ -119,7 +117,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
   
     
     
-    func fetchToDos(completion: @escaping ([ToDo]?) -> Void) {
+    func fetchToDosFromAPI(completion: @escaping ([ToDo]?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: Constants.apiURL)!
 
@@ -145,7 +143,21 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
 
     
-   
+    //MARK:  user defaults check
+    
+    func isFirstLaunch() -> Bool {
+        let userDefaults = UserDefaults.standard
+        let firstLaunchKey = "isFirstLaunch"
+        
+        if userDefaults.bool(forKey: firstLaunchKey) {
+            return false
+        } else {
+            
+            userDefaults.set(true, forKey: firstLaunchKey)
+            userDefaults.synchronize()
+            return true
+        }
+    }
 }
 
 

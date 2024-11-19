@@ -11,6 +11,20 @@ import CoreData
 class ToDoListManager {
     private let context = CoreDataManager.shared.context
 
+    
+    
+    func saveStructArray(_ items: [ToDo]) {
+           for item in items {
+               let newItem = ToDoListItem(context: context)
+               newItem.title = item.todo
+               newItem.completed = item.completed
+               newItem.toDoDescription = item.toDoDescription
+               newItem.createdAt = item.createdAt
+           }
+           saveChanges()
+       }
+    
+    
     // MARK: CRUD
     func createItem(title: String, description: String?, completed: Bool = false) {
         let newItem = ToDoListItem(context: context)
