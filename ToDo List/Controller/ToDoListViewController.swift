@@ -141,7 +141,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         feedbackGenerator.prepare()
         feedbackGenerator.impactOccurred()
         
-        print("button pressed")
+        
+        performSegue(withIdentifier: Constants.fromMainToSpecificToDo, sender: self)
     }
 
 

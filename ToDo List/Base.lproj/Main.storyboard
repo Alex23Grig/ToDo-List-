@@ -41,6 +41,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Задачи" largeTitleDisplayMode="always" style="browser" id="7uC-Pp-6UE"/>
+                    <connections>
+                        <segue destination="gq8-Xc-kOt" kind="show" identifier="fromMainToSpecificToDo" id="ExK-JC-yYj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -56,10 +59,11 @@
                         <viewLayoutGuide key="safeArea" id="Trf-bZ-tcO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="PUP-Xs-g1J"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T2w-8f-ib7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="160" y="-12"/>
+            <point key="canvasLocation" x="252" y="-28"/>
         </scene>
     </scenes>
     <resources>
