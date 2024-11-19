@@ -17,7 +17,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     let toDoManager = ToDoListManager()
     var toDoItems:[ToDoListItem] = []
-    
+    var selectedToDo: ToDoListItem?
     private let toDoCountLabel = UILabel()
    
     //MARK:  viewdidload
@@ -25,8 +25,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        
-        
+
+
 //        
 //        for item in toDoItems {
 //            toDoManager.deleteItem(item)
@@ -39,13 +39,20 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         setupTableView()
         setupBottomPanel()
         
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
         if isFirstLaunch() {
-            print("This is the first launch of the app!")
             loadDataFromAPI()
         } else {
-            print("Welcome back!")
             toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
+        
     }
     
     //MARK:   ui setup
@@ -206,7 +213,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                
                let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
-                   print("Edit tapped for row \(indexPath.row)")
+                   self.selectedToDo = self.toDoItems[indexPath.row]
+                   self.performSegue(withIdentifier: Constants.fromMainToSpecificToDo, sender: self)
                    
                }
                
@@ -259,7 +267,14 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
-    
+    //MARK:  segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Constants.fromMainToSpecificToDo {
+                if let destinationVC = segue.destination as? EditToDoController {
+                    destinationVC.toDo = selectedToDo
+                }
+            }
+        }
     //MARK:  user defaults check
     
     func isFirstLaunch() -> Bool {

@@ -18,7 +18,7 @@ class EditToDoController: UIViewController {
         textField.placeholder = "Задача"
         textField.borderStyle = .none
         textField.adjustsFontSizeToFitWidth = true
-        textField.minimumFontSize = 20
+        textField.minimumFontSize = 10
         textField.textAlignment = .left
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -46,34 +46,59 @@ class EditToDoController: UIViewController {
         return textView
     }()
     
+    //MARK:  vars
+    var toDo : ToDoListItem?
+    let toDoManager = ToDoListManager()
+    
     //MARK:  viewdidload
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-    }
     
+        
+        setupUI(title: toDo?.title ?? "", description: toDo?.toDoDescription ?? "", date: toDo?.createdAt ?? Date())
+    }
+    //MARK:  handle saving data
+    override func viewWillDisappear(_ animated: Bool) {
+        print("User goes back")
+        
+        if let unwrappedToDo = toDo {
+            toDoManager.updateItem(unwrappedToDo, title: titleTextField.text, description: descriptionTextView.text, completed: unwrappedToDo.completed)
+        } else {
+            // toDo is nil
+            print("ToDo is nil")
+        }
+        
+    }
     //MARK:  setup ui
-    private func setupUI() {
+    private func setupUI(title:String, description:String, date: Date) {
         view.backgroundColor = .black
         
-        // Add subviews
+        titleTextField.text = title
+        descriptionTextView.text = description
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        dateLabel.text = dateFormatter.string(from: date)
+        
+        
         view.addSubview(titleTextField)
         view.addSubview(dateLabel)
         view.addSubview(descriptionTextView)
         
-        // Auto Layout constraints
+        
         NSLayoutConstraint.activate([
-            // Title TextField
+            
             titleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            // Date Label
+            
             dateLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 8),
             dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            // Description TextView
+            
             descriptionTextView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -81,4 +106,6 @@ class EditToDoController: UIViewController {
         ])
     }
     
+   
+
 }
