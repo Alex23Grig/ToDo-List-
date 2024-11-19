@@ -18,6 +18,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     let toDoManager = ToDoListManager()
     var toDoItems:[ToDoListItem] = []
     
+    private let toDoCountLabel = UILabel()
    
     //MARK:  viewdidload
     
@@ -36,6 +37,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         setupSearchBar()
         setupTableView()
+        setupBottomPanel()
         
         if isFirstLaunch() {
             print("This is the first launch of the app!")
@@ -55,13 +57,12 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         searchBar.barTintColor = .black
         searchBar.searchTextField.textColor = .white
         
-        
         let headerHeight: CGFloat = 80
         searchBar.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: headerHeight)
         
         tableView.tableHeaderView = searchBar
     }
-    
+
     private func setupTableView() {
         tableView.backgroundColor = .black
         tableView.separatorStyle = .singleLine
@@ -72,13 +73,79 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
+       
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70)
+        ])
+        
+        
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 70, right: 0)
+    }
+
+    private func setupBottomPanel() {
+        
+        let unsafeAreaView = UIView()
+        unsafeAreaView.translatesAutoresizingMaskIntoConstraints = false
+        unsafeAreaView.backgroundColor = .systemGray6
+        view.addSubview(unsafeAreaView)
+        
+        
+        let bottomPanel = UIView()
+        bottomPanel.translatesAutoresizingMaskIntoConstraints = false
+        bottomPanel.backgroundColor = .systemGray6
+        view.addSubview(bottomPanel)
+
+        toDoCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        toDoCountLabel.text = ""
+        toDoCountLabel.font = .boldSystemFont(ofSize: 16)
+        toDoCountLabel.textColor = .lightGray
+        bottomPanel.addSubview(toDoCountLabel)
+
+        let createNewToDoButton = UIButton()
+        createNewToDoButton.translatesAutoresizingMaskIntoConstraints = false
+        createNewToDoButton.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
+        createNewToDoButton.tintColor = .systemYellow
+        createNewToDoButton.addTarget(self, action: #selector(createNewToDoButtonTapped), for: .touchUpInside)
+        bottomPanel.addSubview(createNewToDoButton)
+        
+        
+        NSLayoutConstraint.activate([
+            unsafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            unsafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            unsafeAreaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            unsafeAreaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        
+        NSLayoutConstraint.activate([
+            bottomPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomPanel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bottomPanel.heightAnchor.constraint(equalToConstant: 40),
+
+            toDoCountLabel.centerXAnchor.constraint(equalTo: bottomPanel.centerXAnchor),
+            toDoCountLabel.centerYAnchor.constraint(equalTo: bottomPanel.centerYAnchor),
+
+            createNewToDoButton.trailingAnchor.constraint(equalTo: bottomPanel.trailingAnchor, constant: -16),
+            createNewToDoButton.centerYAnchor.constraint(equalTo: bottomPanel.centerYAnchor),
+            createNewToDoButton.widthAnchor.constraint(equalToConstant: 50),
+            createNewToDoButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    
+    @objc private func createNewToDoButtonTapped() {
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+        feedbackGenerator.prepare()
+        feedbackGenerator.impactOccurred()
+        
+        print("button pressed")
+    }
+
+
+    //MARK:  api calls
     
     private func loadDataFromAPI() {
         
@@ -94,6 +161,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.toDoItems = items.sorted { $0.createdAt > $1.createdAt }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
+                    self.toDoCountLabel.text = String(self.toDoItems.count)
                 }
             }
         }
@@ -103,6 +171,9 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        DispatchQueue.main.async {
+            self.toDoCountLabel.text = String(self.toDoItems.count)
+        }
         return toDoItems.count
     }
     
@@ -124,6 +195,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         toDoItems[indexPath.row].completed.toggle()
+        toDoManager.updateItem(toDoItems[indexPath.row], title: toDoItems[indexPath.row].title, description: toDoItems[indexPath.row].toDoDescription, completed: toDoItems[indexPath.row].completed)
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
