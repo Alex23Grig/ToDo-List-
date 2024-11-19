@@ -13,34 +13,40 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     //MARK:  variables
     private let tableView = UITableView()
-    private var todos: [ToDo] = []
-    private var filteredTodos: [ToDo] = []
     private var searchBar: UISearchBar!
     
     let toDoManager = ToDoListManager()
-    var items:[ToDoListItem] = []
+    var toDoItems:[ToDoListItem] = []
     
-    //MARK:   ui setup
+   
+    //MARK:  viewdidload
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        items = toDoManager.fetchAllItems()
+        
+//        
+//        for item in toDoItems {
+//            toDoManager.deleteItem(item)
+//        }
+        
+//        UserDefaults.standard.set(false, forKey: "isFirstLaunch")
+//        UserDefaults.standard.synchronize()
         
         setupSearchBar()
         setupTableView()
         
         if isFirstLaunch() {
             print("This is the first launch of the app!")
-            
-            print("amount of items in core data is \(items.count)")
+            loadDataFromAPI()
         } else {
             print("Welcome back!")
-            print("amount of items in core data is \(items.count)")
-        }   
+            toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
+        }
     }
     
+    //MARK:   ui setup
     private func setupSearchBar() {
         searchBar = UISearchBar()
         searchBar.delegate = self
@@ -75,20 +81,29 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func loadDataFromAPI() {
-        fetchToDosFromAPI { [weak self] todos in
-            self?.todos = todos ?? []
-            self?.toDoManager.saveStructArray(todos ?? [])
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+        
+        fetchToDosFromAPI { error in
+            if let error = error {
+                print("Failed to fetch or save todos: \(error.localizedDescription)")
+            } else {
+                print("Successfully fetched and saved todos!")
+                
+                // Fetch and print all items for confirmation
+                
+                let items = self.toDoManager.fetchAllItems()
+                self.toDoItems = items.sorted { $0.createdAt > $1.createdAt }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
         }
+
     }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Amount of todos is \(todos.count)")
-        return items.count
+        return toDoItems.count
     }
     
     
@@ -96,7 +111,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath) as? ToDoTableViewCell else {
             return UITableViewCell()
         }
-        let todo = items[indexPath.row]
+        let todo = toDoItems[indexPath.row]
         cell.configure(with: todo)
         return cell
     }
@@ -108,39 +123,50 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        items[indexPath.row].completed.toggle()
+        toDoItems[indexPath.row].completed.toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
 
     //MARK:  api calls
   
+
+
     
-    
-    func fetchToDosFromAPI(completion: @escaping ([ToDo]?) -> Void) {
+    func fetchToDosFromAPI(completion: @escaping (Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: Constants.apiURL)!
 
             URLSession.shared.dataTask(with: url) { data, response, error in
                 guard let data = data, error == nil else {
                     print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
-                    completion(nil)
+                    completion(error)
                     return
                 }
 
                 do {
+                    // Decode the JSON response
                     let toDoResponse = try JSONDecoder().decode(ToDoResponse.self, from: data)
+                    
                     DispatchQueue.main.async {
-                        completion(toDoResponse.todos)
+                        
+                        for todo in toDoResponse.todos {
+                            self.toDoManager.createItem(
+                                title: todo.todo,
+                                description: todo.toDoDescription,
+                                completed: todo.completed
+                            )
+                        }
+                        
+                        completion(nil)
                     }
                 } catch {
                     print("Error decoding JSON: \(error.localizedDescription)")
-                    completion(nil)
+                    completion(error)
                 }
             }.resume()
         }
     }
-    
 
     
     //MARK:  user defaults check

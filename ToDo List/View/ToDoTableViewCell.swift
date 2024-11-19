@@ -122,50 +122,15 @@ class ToDoTableViewCell: UITableViewCell {
         ])
     }
     
-    // MARK: - Configure Cell
+    // MARK: Configure Cell
     
-    func configure(with todo: ToDo) {
-        titleLabel.text = todo.todo
-
-        
-        titleLabel.attributedText = nil
-        
-        if todo.toDoDescription.isEmpty {
-            descriptionLabel.text = "-"
-        } else {
-            descriptionLabel.text = todo.toDoDescription
-        }
-        
-        dateLabel.text = formatDate(Date())
-        
-        if todo.completed {
-            
-            statusIndicator.layer.borderColor = UIColor.systemYellow.cgColor
-            checkmarkView.isHidden = false
-            titleLabel.textColor = UIColor(white: 0.8, alpha: 1)
-            titleLabel.attributedText = NSAttributedString(
-                string: todo.todo,
-                attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-            )
-        } else {
-            statusIndicator.layer.borderColor = UIColor.gray.cgColor
-            checkmarkView.isHidden = true
-            titleLabel.textColor = .white
-            titleLabel.text = todo.todo
-        }
-    }
     
     func configure(with todo: ToDoListItem) {
         titleLabel.text = todo.title
 
         
         titleLabel.attributedText = nil
-        
-//        if todo.toDoDescription?.isEmpty {
-//            descriptionLabel.text = "-"
-//        } else {
-//            descriptionLabel.text = todo.toDoDescription
-//        }
+  
         descriptionLabel.text = todo.toDoDescription ?? ""
         
         dateLabel.text = formatDate(Date())

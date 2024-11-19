@@ -16,10 +16,10 @@ extension ToDoListItem {
         return NSFetchRequest<ToDoListItem>(entityName: "ToDoListItem")
     }
 
-    @NSManaged public var title: String?
+    @NSManaged public var title: String
     @NSManaged public var completed: Bool
-    @NSManaged public var toDoDescription: String?
-    @NSManaged public var createdAt: Date?
+    @NSManaged public var toDoDescription: String
+    @NSManaged public var createdAt: Date
 
 }
 
