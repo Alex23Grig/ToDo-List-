@@ -211,7 +211,11 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                }
                
                let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                   print("Delete tapped for row \(indexPath.row)")
+                   
+                   self.toDoManager.deleteItem(self.toDoItems[indexPath.row])
+                   self.toDoItems.remove(at: indexPath.row)
+                   tableView.deleteRows(at: [indexPath], with: .automatic)
+                   
                }
                
 
