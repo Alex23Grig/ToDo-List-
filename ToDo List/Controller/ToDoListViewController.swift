@@ -17,6 +17,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     let toDoManager = ToDoListManager()
     var toDoItems:[ToDoListItem] = []
+    var filteredToDoItems: [ToDoListItem] = []
     var selectedToDo: ToDoListItem?
     private let toDoCountLabel = UILabel()
    
@@ -35,24 +36,31 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
 //        UserDefaults.standard.set(false, forKey: "isFirstLaunch")
 //        UserDefaults.standard.synchronize()
         
+        //to dismiss keyboard when user taps outside search bar
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        
         setupSearchBar()
         setupTableView()
         setupBottomPanel()
         
         
     }
+    //MARK:  viewwillappear
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if isFirstLaunch() {
             loadDataFromAPI()
         } else {
             toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
+            filteredToDoItems = toDoItems
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
-        
     }
+
     
     //MARK:   ui setup
     private func setupSearchBar() {
@@ -152,47 +160,22 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
 
-    //MARK:  api calls
-    
-    private func loadDataFromAPI() {
-        
-        fetchToDosFromAPI { error in
-            if let error = error {
-                print("Failed to fetch or save todos: \(error.localizedDescription)")
-            } else {
-                print("Successfully fetched and saved todos!")
-                
-                // Fetch and print all items for confirmation
-                
-                let items = self.toDoManager.fetchAllItems()
-                self.toDoItems = items.sorted { $0.createdAt > $1.createdAt }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.toDoCountLabel.text = String(self.toDoItems.count)
-                }
-            }
-        }
 
-    }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        DispatchQueue.main.async {
-            self.toDoCountLabel.text = String(self.toDoItems.count)
-        }
-        return toDoItems.count
+        return searchBar.text?.isEmpty == false ? filteredToDoItems.count : toDoItems.count
     }
-    
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath) as? ToDoTableViewCell else {
-            return UITableViewCell()
-        }
-        let todo = toDoItems[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath) as! ToDoTableViewCell
+        let todo = searchBar.text?.isEmpty == false ? filteredToDoItems[indexPath.row] : toDoItems[indexPath.row]
         cell.configure(with: todo)
         return cell
     }
+
+    
     
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 60
@@ -229,7 +212,26 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                return UIMenu(title: "", children: [editAction, deleteAction])
            }
        }
+    //MARK: search bar functionality
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filteredToDoItems = toDoItems
+        } else {
+            filteredToDoItems = toDoItems.filter { item in
+                item.title.lowercased().contains(searchText.lowercased())
+            }
+        }
+        tableView.reloadData()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    @objc private func dismissKeyboard() {
+        searchBar.resignFirstResponder()
+    }
+
     //MARK:  api calls
     func fetchToDosFromAPI(completion: @escaping (Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
@@ -264,6 +266,27 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             }.resume()
         }
+    }
+    
+    private func loadDataFromAPI() {
+        
+        fetchToDosFromAPI { error in
+            if let error = error {
+                print("Failed to fetch or save todos: \(error.localizedDescription)")
+            } else {
+                print("Successfully fetched and saved todos!")
+                
+                // Fetch and print all items for confirmation
+                
+                let items = self.toDoManager.fetchAllItems()
+                self.toDoItems = items.sorted { $0.createdAt > $1.createdAt }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.toDoCountLabel.text = String(self.toDoItems.count)
+                }
+            }
+        }
+
     }
 
     //MARK:  segue
