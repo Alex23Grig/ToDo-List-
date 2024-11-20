@@ -30,20 +30,50 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         hideKeyboardWhenTappedAround()
 
-//        
-//        for item in toDoItems {
-//            toDoManager.deleteItem(item)
-//        }
         
-//        UserDefaults.standard.set(false, forKey: "isFirstLaunch")
-//        UserDefaults.standard.synchronize()
+        // Set up the navigation bar button
+        let rightButton = UIBarButtonItem(title: "Reset user defaults",
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(rightButtonTapped))
         
+        let leftButton = UIBarButtonItem(title: "Delete all",
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(leftButtonTapped))
+        
+        // Add the button to the navigation bar
+        navigationItem.rightBarButtonItem = rightButton
+        navigationItem.leftBarButtonItem = leftButton
+
         
         setupSearchBar()
         setupTableView()
         setupBottomPanel()
         
         
+    }
+    
+    @objc func rightButtonTapped() {
+        print("Right button tapped")
+        UserDefaults.standard.set(false, forKey: "isFirstLaunch")
+        UserDefaults.standard.synchronize()
+    }
+    
+    @objc func leftButtonTapped() {
+        print("Left button tapped")
+        deleteAllToDoItems()
+        
+    }
+    
+    func deleteAllToDoItems() {
+        for item in toDoItems {
+            toDoManager.deleteItem(item)
+        }
+        toDoItems.removeAll()
+        filteredToDoItems.removeAll()
+        updateToDoCountLabel()
+        tableView.reloadData()
     }
     //MARK:  viewwillappear
     
@@ -55,12 +85,20 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         } else {
             searchBar.text = ""
             searchBar.placeholder = "Поиск"
-            toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
-            filteredToDoItems = toDoItems
             updateToDoCountLabel()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+            
+            DispatchQueue.global(qos: .background).async {
+                let items = self.toDoManager.fetchAllItems()
+                let sortedItems = items.sorted { $0.createdAt > $1.createdAt }
+                
+                DispatchQueue.main.async {
+                    self.toDoItems = sortedItems
+                    self.filteredToDoItems = sortedItems
+                    self.updateToDoCountLabel()
+                    self.tableView.reloadData()
+                }
             }
+
         }
     }
 
@@ -281,8 +319,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                     // Decode the JSON response
                     let toDoResponse = try JSONDecoder().decode(ToDoResponse.self, from: data)
                     
-                    DispatchQueue.main.async {
-                        
+                    DispatchQueue.global(qos: .userInitiated).async {
                         for todo in toDoResponse.todos {
                             self.toDoManager.createItem(
                                 title: todo.todo,
@@ -290,9 +327,11 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                                 completed: todo.completed
                             )
                         }
-                        
-                        completion(nil)
+                        DispatchQueue.main.async {
+                            completion(nil)
+                        }
                     }
+
                 } catch {
                     print("Error decoding JSON: \(error.localizedDescription)")
                     completion(error)
