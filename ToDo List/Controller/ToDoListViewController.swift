@@ -83,8 +83,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         if isFirstLaunch() {
             loadDataFromAPI()
         } else {
+            //reset search bar text when come back from edit/create screens
             searchBar.text = ""
-            searchBar.placeholder = "Поиск"
             updateToDoCountLabel()
             
             DispatchQueue.global(qos: .background).async {
@@ -107,7 +107,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     private func setupSearchBar() {
         searchBar = UISearchBar()
         searchBar.delegate = self
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Поиск"
+        searchBar.text = ""
         searchBar.backgroundColor = .black
         searchBar.barTintColor = .black
         searchBar.searchTextField.textColor = .white
@@ -244,35 +245,86 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         
     }
     
+    //MARK:  swipe actions for table
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { _, _, completionHandler in
+            guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else {
+                completionHandler(false)
+                return
+            }
+            
+            let itemToDelete = self.toDoItems[originalIndex]
+            DispatchQueue.global(qos: .background).async {
+                self.toDoManager.deleteItem(itemToDelete)
+                
+                DispatchQueue.main.async {
+                    self.toDoItems.remove(at: originalIndex)
+                    self.filteredToDoItems.remove(at: indexPath.row)
+                    self.updateToDoCountLabel()
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    completionHandler(true)
+                }
+            }
+        }
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let editAction = UIContextualAction(style: .normal, title: "Редактировать") { _, _, completionHandler in
+            guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else {
+                completionHandler(false)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.selectedToDo = self.toDoItems[originalIndex]
+                self.performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
+                completionHandler(true)
+            }
+        }
+        editAction.image = UIImage(systemName: "square.and.pencil")
+        editAction.backgroundColor = .systemGreen
+        
+        return UISwipeActionsConfiguration(actions: [editAction])
+    }
+
+
+    
     //MARK:  Context Menu Setup
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         
-           return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-               
-               let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
-                   guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
-                   self.selectedToDo = self.toDoItems[originalIndex]
-                   self.performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
-               }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
+                guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+                
+                DispatchQueue.main.async {
+                    self.selectedToDo = self.toDoItems[originalIndex]
+                    self.performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
+                }
+            }
 
-               
-               let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                   guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+                let itemToDelete = self.toDoItems[originalIndex]
 
-                   self.toDoManager.deleteItem(self.toDoItems[originalIndex])
-                   self.toDoItems.remove(at: originalIndex)
+                DispatchQueue.global(qos: .background).async {
+                    self.toDoManager.deleteItem(itemToDelete)
+                    
+                    DispatchQueue.main.async {
+                        self.toDoItems.remove(at: originalIndex)
+                        self.filteredToDoItems.remove(at: indexPath.row)
+                        self.updateToDoCountLabel()
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                    }
+                }
+            }
 
-                   self.filteredToDoItems.remove(at: indexPath.row)
-                   
-                   self.updateToDoCountLabel()
-                   tableView.deleteRows(at: [indexPath], with: .automatic)
-               }
-
-               
-
-               return UIMenu(title: "", children: [editAction, deleteAction])
-           }
-       }
+            return UIMenu(title: "", children: [editAction, deleteAction])
+        }
+    }
     //MARK: search bar functionality
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
