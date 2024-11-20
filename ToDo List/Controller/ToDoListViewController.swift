@@ -219,11 +219,13 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
             filteredToDoItems = toDoItems
         } else {
             filteredToDoItems = toDoItems.filter { item in
-                item.title.lowercased().contains(searchText.lowercased())
+                item.title.lowercased().contains(searchText.lowercased()) ||
+                item.toDoDescription.lowercased().contains(searchText.lowercased())
             }
         }
         tableView.reloadData()
     }
+
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
