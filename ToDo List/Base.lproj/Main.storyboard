@@ -53,10 +53,10 @@
             </objects>
             <point key="canvasLocation" x="-632.30769230769226" y="-28.436018957345969"/>
         </scene>
-        <!--Edit To Do Controller-->
+        <!--Edit To Do View Controller-->
         <scene sceneID="7FH-SP-ehf">
             <objects>
-                <viewController id="gq8-Xc-kOt" customClass="EditToDoController" customModule="ToDo_List" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="gq8-Xc-kOt" customClass="EditToDoViewController" customModule="ToDo_List" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xpp-A1-JiG">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -69,15 +69,15 @@
             </objects>
             <point key="canvasLocation" x="566" y="-266"/>
         </scene>
-        <!--View Controller-->
+        <!--Create To Do View Controller-->
         <scene sceneID="Xf6-7n-uKU">
             <objects>
-                <viewController id="OX9-j9-632" sceneMemberID="viewController">
+                <viewController id="OX9-j9-632" customClass="CreateToDoViewController" customModule="ToDo_List" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ltv-qg-CX5">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="DIZ-lU-R5O"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <navigationItem key="navigationItem" id="BxL-Oi-h3r"/>
                 </viewController>
@@ -87,9 +87,6 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

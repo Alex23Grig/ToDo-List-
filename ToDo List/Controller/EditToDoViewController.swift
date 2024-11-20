@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class EditToDoController: UIViewController {
+class EditToDoViewController: UIViewController {
     
     //MARK:  ui vars
     private let titleTextField: UITextField = {
@@ -59,7 +59,6 @@ class EditToDoController: UIViewController {
     }
     //MARK:  handle saving data
     override func viewWillDisappear(_ animated: Bool) {
-        print("User goes back")
         
         if let unwrappedToDo = toDo {
             toDoManager.updateItem(unwrappedToDo, title: titleTextField.text, description: descriptionTextView.text, completed: unwrappedToDo.completed)

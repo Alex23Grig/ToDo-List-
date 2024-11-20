@@ -148,7 +148,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         feedbackGenerator.impactOccurred()
         
         
-        performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
+        performSegue(withIdentifier: Constants.fromMainToCreateToDo, sender: self)
     }
 
 
@@ -269,7 +269,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.fromMainToEditToDo {
-                if let destinationVC = segue.destination as? EditToDoController {
+                if let destinationVC = segue.destination as? EditToDoViewController {
                     destinationVC.toDo = selectedToDo
                 }
             }
