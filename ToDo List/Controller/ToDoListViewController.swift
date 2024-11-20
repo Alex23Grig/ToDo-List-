@@ -43,7 +43,6 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         if isFirstLaunch() {
             loadDataFromAPI()
         } else {
@@ -149,7 +148,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         feedbackGenerator.impactOccurred()
         
         
-        performSegue(withIdentifier: Constants.fromMainToSpecificToDo, sender: self)
+        performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
     }
 
 
@@ -214,7 +213,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                
                let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
                    self.selectedToDo = self.toDoItems[indexPath.row]
-                   self.performSegue(withIdentifier: Constants.fromMainToSpecificToDo, sender: self)
+                   self.performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
                    
                }
                
@@ -269,7 +268,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
 
     //MARK:  segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.fromMainToSpecificToDo {
+        if segue.identifier == Constants.fromMainToEditToDo {
                 if let destinationVC = segue.destination as? EditToDoController {
                     destinationVC.toDo = selectedToDo
                 }

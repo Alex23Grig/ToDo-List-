@@ -28,7 +28,7 @@ class ToDoTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.textColor = UIColor(white: 0.8, alpha: 1)
-        label.numberOfLines = 0
+        label.numberOfLines = 5
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         label.lineBreakMode = .byWordWrapping
@@ -47,7 +47,7 @@ class ToDoTableViewCell: UITableViewCell {
         let view = UIView()
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.gray.cgColor
-        view.layer.cornerRadius = 12 // Circle
+        view.layer.cornerRadius = 12
         view.clipsToBounds = true
         return view
     }()
@@ -57,7 +57,7 @@ class ToDoTableViewCell: UITableViewCell {
         imageView.image = UIImage(systemName: "checkmark")
         imageView.tintColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
-        imageView.isHidden = true // Hidden by default
+        imageView.isHidden = true
         return imageView
     }()
     

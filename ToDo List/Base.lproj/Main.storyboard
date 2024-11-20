@@ -45,7 +45,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Задачи" largeTitleDisplayMode="always" style="browser" id="7uC-Pp-6UE"/>
                     <connections>
-                        <segue destination="gq8-Xc-kOt" kind="show" identifier="fromMainToSpecificToDo" id="ExK-JC-yYj"/>
+                        <segue destination="gq8-Xc-kOt" kind="show" identifier="fromMainToEditToDo" id="ExK-JC-yYj"/>
+                        <segue destination="OX9-j9-632" kind="show" identifier="fromMainToCreateToDo" id="4nd-N5-aHP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -66,10 +67,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T2w-8f-ib7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="252" y="-28"/>
+            <point key="canvasLocation" x="566" y="-266"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Xf6-7n-uKU">
+            <objects>
+                <viewController id="OX9-j9-632" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ltv-qg-CX5">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="DIZ-lU-R5O"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="BxL-Oi-h3r"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FAf-ka-pg6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="560" y="435"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
