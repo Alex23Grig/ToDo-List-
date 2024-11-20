@@ -14,6 +14,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  variables
     private let tableView = UITableView()
     private var searchBar: UISearchBar!
+    var isKeyboardVisible: Bool = false
     
     let toDoManager = ToDoListManager()
     var toDoItems:[ToDoListItem] = []
@@ -26,7 +27,8 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-
+        
+        hideKeyboardWhenTappedAround()
 
 //        
 //        for item in toDoItems {
@@ -36,9 +38,6 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
 //        UserDefaults.standard.set(false, forKey: "isFirstLaunch")
 //        UserDefaults.standard.synchronize()
         
-        //to dismiss keyboard when user taps outside search bar
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGestureRecognizer)
         
         setupSearchBar()
         setupTableView()
@@ -49,10 +48,13 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  viewwillappear
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
         if isFirstLaunch() {
             loadDataFromAPI()
         } else {
+            searchBar.text = ""
+            searchBar.placeholder = "Поиск"
             toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
             filteredToDoItems = toDoItems
             updateToDoCountLabel()
@@ -190,9 +192,18 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     //MARK:  UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        toDoItems[indexPath.row].completed.toggle()
-        toDoManager.updateItem(toDoItems[indexPath.row], title: toDoItems[indexPath.row].title, description: toDoItems[indexPath.row].toDoDescription, completed: toDoItems[indexPath.row].completed)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+
+        print("Tapped cell at \(indexPath.row)")
+        guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+        toDoItems[originalIndex].completed.toggle()
+        
+        toDoManager.updateItem(toDoItems[originalIndex], title: toDoItems[originalIndex].title, description: toDoItems[originalIndex].toDoDescription, completed: toDoItems[originalIndex].completed)
+        
+        DispatchQueue.main.async {
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        
     }
     
     //MARK:  Context Menu Setup
@@ -201,18 +212,24 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                
                let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "square.and.pencil")) { _ in
-                   self.selectedToDo = self.toDoItems[indexPath.row]
+                   guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+                   self.selectedToDo = self.toDoItems[originalIndex]
                    self.performSegue(withIdentifier: Constants.fromMainToEditToDo, sender: self)
-                   
                }
+
                
                let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                   guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
+
+                   self.toDoManager.deleteItem(self.toDoItems[originalIndex])
+                   self.toDoItems.remove(at: originalIndex)
+
+                   self.filteredToDoItems.remove(at: indexPath.row)
                    
-                   self.toDoManager.deleteItem(self.toDoItems[indexPath.row])
-                   self.toDoItems.remove(at: indexPath.row)
+                   self.updateToDoCountLabel()
                    tableView.deleteRows(at: [indexPath], with: .automatic)
-                   
                }
+
                
 
                return UIMenu(title: "", children: [editAction, deleteAction])
@@ -236,12 +253,17 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
 
+    //to properly delete/edit itmes when search is used
+    func getOriginalIndex(for filteredIndex: Int) -> Int? {
+        let filteredItem = filteredToDoItems[filteredIndex]
+        return toDoItems.firstIndex { $0 === filteredItem }
+    }
+
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-    @objc private func dismissKeyboard() {
-        searchBar.resignFirstResponder()
-    }
+    
 
     //MARK:  api calls
     func fetchToDosFromAPI(completion: @escaping (Error?) -> Void) {
