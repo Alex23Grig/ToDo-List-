@@ -55,6 +55,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         } else {
             toDoItems = toDoManager.fetchAllItems().sorted { $0.createdAt > $1.createdAt }
             filteredToDoItems = toDoItems
+            updateToDoCountLabel()
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -160,6 +161,11 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
 
+    private func updateToDoCountLabel() {
+        DispatchQueue.main.async {
+            self.toDoCountLabel.text = String(self.searchBar.text?.isEmpty == false ? self.filteredToDoItems.count : self.toDoItems.count)
+        }
+    }
 
     
     // MARK: - UITableViewDataSource
@@ -223,7 +229,10 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 item.toDoDescription.lowercased().contains(searchText.lowercased())
             }
         }
-        tableView.reloadData()
+        updateToDoCountLabel()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
 
