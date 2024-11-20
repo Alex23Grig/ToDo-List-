@@ -42,7 +42,6 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                                           target: self,
                                           action: #selector(leftButtonTapped))
         
-        // Add the button to the navigation bar
         navigationItem.rightBarButtonItem = rightButton
         navigationItem.leftBarButtonItem = leftButton
 
@@ -81,12 +80,13 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         super.viewWillAppear(animated)
         if isFirstLaunch() {
+            print("First load")
             loadDataFromAPI()
         } else {
             //reset search bar text when come back from edit/create screens
             searchBar.text = ""
             updateToDoCountLabel()
-            
+            print("Not first load")
             DispatchQueue.global(qos: .background).async {
                 let items = self.toDoManager.fetchAllItems()
                 let sortedItems = items.sorted { $0.createdAt > $1.createdAt }
@@ -399,18 +399,21 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 print("Failed to fetch or save todos: \(error.localizedDescription)")
             } else {
                 print("Successfully fetched and saved todos!")
-                
-                // Fetch and print all items for confirmation
-                
-                let items = self.toDoManager.fetchAllItems()
-                self.toDoItems = items.sorted { $0.createdAt > $1.createdAt }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.toDoCountLabel.text = String(self.toDoItems.count)
+                DispatchQueue.global(qos: .background).async {
+                    let items = self.toDoManager.fetchAllItems()
+                    let sortedItems = items.sorted { $0.createdAt > $1.createdAt }
+                    
+                    DispatchQueue.main.async {
+                        self.toDoItems = sortedItems
+                        self.filteredToDoItems = sortedItems
+                        self.updateToDoCountLabel()
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }
-
+        
+        
     }
 
     //MARK:  segue
