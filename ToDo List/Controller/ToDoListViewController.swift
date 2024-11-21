@@ -92,7 +92,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
             searchBar.text = ""
             updateToDoCountLabel()
             print("Not first load")
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .utility).async {
                 let items = self.toDoManager.fetchAllItems()
                 let sortedItems = items.sorted { $0.createdAt > $1.createdAt }
                 
@@ -259,7 +259,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             let itemToDelete = self.toDoItems[originalIndex]
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .utility).async {
                 self.toDoManager.deleteItem(itemToDelete)
                 
                 DispatchQueue.main.async {
@@ -315,7 +315,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
                 let itemToDelete = self.toDoItems[originalIndex]
 
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     self.toDoManager.deleteItem(itemToDelete)
                     
                     DispatchQueue.main.async {
@@ -362,7 +362,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
 
     //MARK:  api calls
     func fetchToDosFromAPI(completion: @escaping (Error?) -> Void) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             let url = URL(string: Constants.apiURL)!
 
             URLSession.shared.dataTask(with: url) { data, response, error in
@@ -404,7 +404,7 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
                 print("Failed to fetch or save todos: \(error.localizedDescription)")
             } else {
                 print("Successfully fetched and saved todos!")
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInitiated).async {
                     let items = self.toDoManager.fetchAllItems()
                     let sortedItems = items.sorted { $0.createdAt > $1.createdAt }
                     
