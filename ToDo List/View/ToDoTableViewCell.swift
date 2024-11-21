@@ -12,7 +12,7 @@ class ToDoTableViewCell: UITableViewCell {
     
     // MARK: - UI Elements
     
-    private let titleLabel: UILabel = {
+     let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textColor = .white
@@ -24,7 +24,7 @@ class ToDoTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
+     let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.textColor = UIColor(white: 0.8, alpha: 1)
@@ -36,14 +36,14 @@ class ToDoTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let dateLabel: UILabel = {
+     let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .light)
         label.textColor = UIColor(white: 0.6, alpha: 1)
         return label
     }()
     
-    private let statusIndicator: UIView = {
+     let statusIndicator: UIView = {
         let view = UIView()
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.gray.cgColor
@@ -52,7 +52,7 @@ class ToDoTableViewCell: UITableViewCell {
         return view
     }()
     
-    private let checkmarkView: UIImageView = {
+     let checkmarkView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "checkmark")
         imageView.tintColor = .systemYellow
@@ -154,7 +154,7 @@ class ToDoTableViewCell: UITableViewCell {
 
 
     
-    private func formatDate(_ date: Date) -> String {
+     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yy"
         return formatter.string(from: date)
