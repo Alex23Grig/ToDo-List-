@@ -30,25 +30,26 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         hideKeyboardWhenTappedAround()
 
+  
+        
+        //nav panel buttons for testing
+        // Set up the navigation bar button
+        let rightButton = UIBarButtonItem(title: "Reset user defaults",
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(rightButtonTapped))
+        
+        let leftButton = UIBarButtonItem(title: "Delete all",
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(leftButtonTapped))
+        
+        navigationItem.rightBarButtonItem = rightButton
+        navigationItem.leftBarButtonItem = leftButton
+
         //force dark mode so ui stays same
         overrideUserInterfaceStyle = .dark
         navigationController?.navigationBar.barStyle = .black
-        
-//        //nav panel buttons for testing
-//        // Set up the navigation bar button
-//        let rightButton = UIBarButtonItem(title: "Reset user defaults",
-//                                          style: .plain,
-//                                          target: self,
-//                                          action: #selector(rightButtonTapped))
-//        
-//        let leftButton = UIBarButtonItem(title: "Delete all",
-//                                          style: .plain,
-//                                          target: self,
-//                                          action: #selector(leftButtonTapped))
-//        
-//        navigationItem.rightBarButtonItem = rightButton
-//        navigationItem.leftBarButtonItem = leftButton
-
         
         setupSearchBar()
         setupTableView()
