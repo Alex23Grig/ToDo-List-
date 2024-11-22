@@ -228,7 +228,6 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     
-    
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 60
 //    }
@@ -237,8 +236,6 @@ class ToDoListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-
-        print("Tapped cell at \(indexPath.row)")
         guard let originalIndex = self.getOriginalIndex(for: indexPath.row) else { return }
         toDoItems[originalIndex].completed.toggle()
         

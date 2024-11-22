@@ -43,7 +43,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Задачи" largeTitleDisplayMode="always" style="browser" id="7uC-Pp-6UE"/>
+                    <navigationItem key="navigationItem" title="Задачи" largeTitleDisplayMode="always" id="7uC-Pp-6UE"/>
                     <connections>
                         <segue destination="gq8-Xc-kOt" kind="show" identifier="fromMainToEditToDo" id="ExK-JC-yYj"/>
                         <segue destination="OX9-j9-632" kind="show" identifier="fromMainToCreateToDo" id="4nd-N5-aHP"/>

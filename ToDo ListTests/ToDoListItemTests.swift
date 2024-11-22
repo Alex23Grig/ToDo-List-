@@ -22,7 +22,7 @@ class ToDoListItemTests: XCTestCase {
         description.type = NSInMemoryStoreType
         persistentContainer.persistentStoreDescriptions = [description]
         
-        try persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error {
                 XCTFail("Failed to load in-memory store: \(error)")
             }

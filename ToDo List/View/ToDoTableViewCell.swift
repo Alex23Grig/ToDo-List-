@@ -131,7 +131,7 @@ class ToDoTableViewCell: UITableViewCell {
         
         titleLabel.attributedText = nil
   
-        descriptionLabel.text = todo.toDoDescription ?? ""
+        descriptionLabel.text = todo.toDoDescription
         
         dateLabel.text = formatDate(Date())
         
@@ -141,7 +141,7 @@ class ToDoTableViewCell: UITableViewCell {
             checkmarkView.isHidden = false
             titleLabel.textColor = UIColor(white: 0.8, alpha: 1)
             titleLabel.attributedText = NSAttributedString(
-                string: todo.title ?? "",
+                string: todo.title,
                 attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
             )
         } else {
